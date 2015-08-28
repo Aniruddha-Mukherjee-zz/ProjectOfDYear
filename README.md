@@ -1,10 +1,9 @@
 # ProjectOfDYear
 Final year project prepared by Aniruddha Mukherjee and Rahul Goutam
 
-How to Compile:
+This is the  module that can run single JS file and supports synchronous AJAX calls only.
 
-g++ jsEngine.cpp -lcurl -lv8 -lpthread
+How to Compile n Run:
+makefile -f Makefile.mk
 
-How to run:
 
-./a.out
