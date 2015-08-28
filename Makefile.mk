@@ -1,6 +1,6 @@
 # the compiler: gcc for C program, define as g++ for C++
 CXX = g++
-ARGS=weird.js
+ARGS=stage.js weird.js 
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
@@ -13,7 +13,7 @@ TARGET = jsEngine
 
 run:
 	$(CXX) $(TARGET).cpp $(LOADLIBES) -o $(TARGET)
-	
+
 	./$(TARGET) $(ARGS)
 
 clean:

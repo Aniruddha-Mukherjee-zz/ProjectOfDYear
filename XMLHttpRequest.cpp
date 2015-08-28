@@ -173,19 +173,21 @@ void XMLHttpRequest::send() {
 }
 
 void XMLHttpRequest::sendCallback(const v8::Arguments& args) {
-				//cout<<"in XMLHttpRequest::sendCallback() \n";
+		//cout<<"in XMLHttpRequest::sendCallback() \n";
 		Locker lock;
 		HandleScope scope;
 		XMLHttpRequest* xml = UnwrapXMLHttpRequest(args);
 		if(xml!=NULL){
 			if(args.Length()==1){
 			 String::Utf8Value a00( args[0]->ToString());char *a0= *a00;
+			 //cout<<"inside not NULL"<<endl;
 			 if(!a0 || a0[0]!='\0')
 						xml->set_payload(a0);
 						xml->send();
-			}
+					}
+			else
+					xml->send();
 		}
-
 }
 
 void  XMLHttpRequest::setRequestHeader(string ctype,string head)
@@ -270,16 +272,3 @@ Handle<Value> XMLHttpRequest::getstatusCallback(Local<String> property,const Acc
 				    	  }
 				    	  return Undefined();
 }
-
-
-
- static	int my_trace(CURL *handle, curl_infotype type,char *data, size_t size,void *userp)
-  {
-	 cout<<"inside my_trace";
-	 const char *text;
-    (void)handle;
-    string temp_data;
-    temp_data.append(data, size);
-    cout<<temp_data.c_str();
-    return 0;
-  }

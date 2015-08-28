@@ -19,4 +19,4 @@ delta.onreadystatechange=function ()
 
 };
 //delta.onreadystatechange=myCallback2;
-delta.send("data");
+delta.send();

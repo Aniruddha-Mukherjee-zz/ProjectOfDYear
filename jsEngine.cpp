@@ -79,47 +79,65 @@ void exposePrint( Handle<ObjectTemplate> targetObject )
 
 
 
+static void* runJSfile(void * void_this){
+  Locker locker;
+  HandleScope handle_scope;
+
+  Handle<ObjectTemplate> globalTemplate = ObjectTemplate::New();
+
+  exposePrint( globalTemplate );
+  exposeXMLHttpRequest( globalTemplate );
+
+Handle<Context> context = Context::New( NULL, globalTemplate );
+
+    context->Enter();
+    cout<<"inside runJSfile"<<endl;
+
+    const char *filename=(const char*)void_this;
+    string file_data=filetochar(filename);
+
+    Handle<String> source = String::New(file_data.c_str());
+
+    if( source.IsEmpty() ) cout<<"Empty Source File";
+        Handle<Script> script = Script::Compile(source);
+
+
+     if(!script.IsEmpty()) // is script compiled ?
+     {
+       Handle<Value> result = script->Run();
+
+       if(!result.IsEmpty())
+       // Convert the result to an ASCII string and print it.
+       String::AsciiValue ascii(result);
+
+       else
+       cout<<"Running Failed"<<endl;
+     }
+     else{
+       cout<<"Compilation Failed"<<endl;
+     }
+}
+
+
     int main(int argc, char **argv)
     {
-        Locker locker;
-        HandleScope handle_scope;
+    pthread_t *anix[argc];
 
-        Handle<ObjectTemplate> globalTemplate = ObjectTemplate::New();
+    for(int i=1;i<argc;i++){
 
-        exposePrint( globalTemplate );
-        exposeXMLHttpRequest( globalTemplate );
+      anix[i]=new pthread_t();
+    int is_thread_ok = pthread_create(anix[i], NULL,runJSfile, argv[i]);
 
+    if (is_thread_ok)
+      cout<<"could not create thread for "<<argv[i]<<endl;
 
-      Handle<Context> context = Context::New( NULL, globalTemplate );
-
-        //context = Context::New( NULL, globalTemplate );
-
-        context->Enter();
-
-    if(argc > 1)
-  {
-
-    string file_data=filetochar(argv[1]);
-      //The source code of this file.
-      //cout<<file_data;
-      //cout<<"Working ??\n";
-      Handle<String> source = String::New(file_data.c_str());
-
-      if( source.IsEmpty() ) cout<<"Empty Source File";
-
-        // Compile the Javascript code.
-   Handle<Script> script = Script::Compile(source);
-   Handle<Value> result = script->Run();
-
-   String::AsciiValue ascii(result);
-   //writetofile("anix_output.txt",*ascii);
-   //printf("%s\n", *ascii);
-
+      //pthread_join(*anix[i],0);
     }
 
-    /*else {
+if(argc<2)
+        printf("Usage: <scriptname.js> \n Execute the javascript file.\n");
 
-        //printf("Usage: <scriptname.js> \n Execute the javascript file.");
-    }*/
+
+        usleep(10000090);
         return 0;
     }

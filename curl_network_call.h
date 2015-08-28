@@ -7,15 +7,23 @@
 #include<cstdlib>
 #include<v8.h>
 #include <v8-debug.h>
-
 #include <pthread.h>
-
-
-
 #include"XMLHttpRequest.h"
 
 using namespace std;
 using namespace v8;
+
+
+ static	int my_trace(CURL *handle, curl_infotype type,char *data, size_t size,void *userp)
+  {
+	 cout<<"inside my_trace";
+	 const char *text;
+    (void)handle;
+    string temp_data;
+    temp_data.append(data, size);
+    cout<<temp_data.c_str();
+    return 0;
+  }
 
 
 size_t  WriteHeaderCallback(char *contents, size_t size, size_t nmemb, void *this_pointer)
@@ -80,6 +88,8 @@ bool network_call(XMLHttpRequest *request)
 
 	  curl_easy_setopt(curl_handle, CURLOPT_HEADERFUNCTION, WriteHeaderCallback);
 	  curl_easy_setopt(curl_handle, CURLOPT_HEADERDATA, request);
+
+		curl_easy_setopt(curl_handle, CURLOPT_DEBUGFUNCTION, my_trace);
 
 	  curl_easy_perform(curl_handle);
 
