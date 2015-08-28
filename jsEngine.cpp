@@ -96,10 +96,10 @@ void exposePrint( Handle<ObjectTemplate> targetObject )
 
         context->Enter();
 
-    //if(argc > 1)
+    if(argc > 1)
   {
 
-    string file_data=filetochar("weird.js");
+    string file_data=filetochar(argv[1]);
       //The source code of this file.
       //cout<<file_data;
       //cout<<"Working ??\n";
