@@ -2,18 +2,19 @@
 CXX = g++
 ARGS=weird.js
 
-LOCAL_SHARED_LIBRARIES := v8
+LOCAL_SHARED_LIBRARIES := v8 curl
 
-LOADLIBES = -lcurl  -lpthread
+LOADLIBES =  -lpthread
 
 # the build target executable:
 TARGET = jsEngine
-LOCAL_CPP_INCLUDES= $(LOCAL_PATH)/include/
+v8_INCLUDES= $(LOCAL_PATH)/include/v8
+curl_INCLUDES=$(LOCAL_PATH)/include/curl
 
 #all: $(TARGET)
 
 run:
-	$(CXX) $(TARGET).cpp  -l $(LOCAL_SHARED_LIBRARIES) -I $(LOCAL_CPP_INCLUDES)  $(LOADLIBES) -o $(TARGET)
+	$(CXX) $(TARGET).cpp  -lv8 -I $(v8_INCLUDES) -lcurl -I $(curl_INCLUDES)  $(LOADLIBES) -o $(TARGET)
 
 	./$(TARGET) $(ARGS)
 
